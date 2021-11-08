@@ -172,6 +172,7 @@ class Bar(Gap, configurable.Configurable):
         self.saved_focus = None
         self.cursor_in = None
         self.window = None
+        self.has_keyboard = None
         self.size_calculated = 0
         self._configured = False
 
