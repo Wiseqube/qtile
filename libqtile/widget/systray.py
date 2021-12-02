@@ -117,6 +117,7 @@ class Systray(window._Window, base._Widget):
         self.add_defaults(Systray.defaults)
         self.icons = {}
         self.screen = 0
+        self._name = config.get("name", "systray")
 
     def calculate_length(self):
         if self.bar.horizontal:
@@ -136,6 +137,9 @@ class Systray(window._Window, base._Widget):
         win = conn.create_window(-1, -1, 1, 1)
         window._Window.__init__(self, window.XWindow(conn, win.wid), qtile)
         qtile.windows_map[win.wid] = self
+
+        # window._Window.__init__ overwrites the widget name so we need to restore it
+        self.name = self._name
 
         # Even when we have multiple "Screen"s, we are setting up as the system
         # tray on a particular X display, that is the screen we need to
@@ -211,7 +215,7 @@ class Systray(window._Window, base._Widget):
     def draw(self):
         offset = self.padding
         self.drawer.clear(self.background or self.bar.background)
-        self.drawer.draw(offsetx=self.offset, width=self.length)
+        self.drawer.draw(offsetx=self.offset, offsety=self.offsety, width=self.length)
         for pos, icon in enumerate(self.icons.values()):
             icon.window.set_attribute(backpixmap=self.drawer.pixmap)
             if self.bar.horizontal:
